@@ -26,7 +26,7 @@ class PlayerCharacter:
     
     def __str__(self):
         return f"Player: {self.name}"
-      
+    
     @classmethod
     def adding_things(cls,num1,num2): #cls stands for class
       return num1 + num2
@@ -49,3 +49,30 @@ player4.attack = 50
 print(player4.adding_things(2,4))
 
 print(PlayerCharacter.adding_things(4,4))
+
+class User:
+  def sign_in(self):
+    print("logged in")
+  
+    
+class Wizard(User):
+  def __init__(self,name,power):
+    self.name =name
+    self.power = power
+  def attack(self):
+    print(f'attacking with power of {self.power}')
+########
+
+class Archer(User):
+  def __init__(self,name,num_arrows):
+    self.name =name
+    self.num_arrows = num_arrows
+  def attack(self):
+    print(f'arrows left- {self.num_arrows}')
+
+wizard1 = Wizard("Merlin", 50)
+archer1 = Archer("Robin",100)
+print(wizard1.name)
+print(wizard1.sign_in())
+print(archer1.attack())
+
