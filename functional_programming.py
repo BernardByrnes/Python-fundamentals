@@ -61,6 +61,8 @@
 # # 
 my_list = [1,2,3]
 my_list10=[19,28,23,39,46,42,74,99,26,75,42,31]
+my_string = 'welcome'
+my_string2 = 'belong to the city'
 
 # def accumulator(acc,item):
 #   print(acc,item)
@@ -72,14 +74,25 @@ my_list10=[19,28,23,39,46,42,74,99,26,75,42,31]
 # used for functions u will use once
 
 # lambda param:action(param)
-from functools import reduce
-def multiply_2(item):
-  return item*2
+# from functools import reduce
+# def multiply_2(item):
+#   return item*2
 
-print(list(map(lambda item: item * 10, my_list)))
-print(list(filter(lambda item: item % 2 !=0, my_list10)))
-print(reduce(lambda acc, item: acc+item, my_list10)) 
+# print(list(map(lambda item: item * 10, my_list)))
+# print(list(filter(lambda item: item % 2 !=0, my_list10)))
+# print(reduce(lambda acc, item: acc+item, my_list10)) 
 
-mixed_list = [(0,2),(4,3),(10,-1),(9,9)]
-mixed_list.sort(key=lambda x: x[1])
-print(mixed_list)
+# mixed_list = [(0,2),(4,3),(10,-1),(9,9)]
+# mixed_list.sort(key=lambda x: x[1])
+# print(mixed_list)
+
+#~list,set,dictionary List COMPREHENSIONS
+
+for char in "hello":
+  my_list.append(char)
+  
+my_text = [char.upper() for char in 'chameleon']
+my_list3 = [num*2 for num in range(0,100)]
+
+print(my_text) 
+print(my_list3)
