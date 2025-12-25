@@ -95,3 +95,24 @@ print(archer1.email)
 # for char in [archer1,wizard1]:
 #   print(char)
 
+#~Dunder Methods
+
+print(dir(wizard1))
+
+class Toy():
+  def __init__(self,color,age):
+    self.color =color
+    self.age = age
+    self.my_dict = {
+      "name":"Yoyo",
+      "has_pets": False
+    }
+  def __str__(self):
+    return f"My color is: {self.color}"
+  def __getitem__(self,i):
+    return self.my_dict[i]
+
+action_figure = Toy("red",13)
+print(action_figure)
+print(str(action_figure))
+print(action_figure["has_pets"])
