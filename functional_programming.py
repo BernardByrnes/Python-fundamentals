@@ -86,7 +86,7 @@ my_string2 = 'belong to the city'
 # mixed_list.sort(key=lambda x: x[1])
 # print(mixed_list)
 
-#~list,set,dictionary List COMPREHENSIONS
+#~list,set,dictionary (List COMPREHENSIONS)
 
 for char in "hello":
   my_list.append(char)
@@ -96,3 +96,15 @@ my_list3 = [num*2 for num in range(0,100)]
 
 print(my_text) 
 print(my_list3)
+
+simple_dict = {
+  "a":2,
+  "b":3
+}
+
+my_dict1 = {key:value**2 for key,value in simple_dict.items()}
+
+print(my_dict1)
+#exercise 2
+my_dict3 = {num:num*2 for num in [1,2,3]}
+print(my_dict3)
