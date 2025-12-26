@@ -27,3 +27,16 @@ def bye():
 
 hello()
 bye()
+
+
+def performance(fn):
+  def wrapper(*args,):
+    result = fn(*args)
+    return result
+  return wrapper
+
+@performance
+def long_time():
+  for i in range (1000):
+    return i*2
+  
