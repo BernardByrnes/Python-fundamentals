@@ -18,21 +18,30 @@
 #     text = f.write("😎😎😋😊😊")
 # print(text)
 
-with open('sad.pdf', 'w', encoding='utf-8') as f:
-    text = f.write("damn!!")
-print(text)
+# with open('sad.pdf', 'w', encoding='utf-8') as f:
+#     text = f.write("damn!!")
+# print(text)
 
 
 # with open('sample.txt', 'r', encoding='utf-8') as f:
 #     for line in f:
 #         print(line.rstrip('\n'))
 
-from pathlib import Path
-text = Path('sample.txt').read_text(encoding='utf-8')
-print(text)
+# from pathlib import Path
+# text = Path('sample.txt').read_text(encoding='utf-8')
+# print(text)
+
+# try:
+#     with open('sample.txt', 'r', encoding='utf-8') as f:
+#         print(f.read())
+# except FileNotFoundError:
+#     print("File not found:", 'sample.txt')
+# except IOError as err:
+#     print("IO Error")
+#     raise err
 
 try:
-    with open('sample.txt', 'r', encoding='utf-8') as f:
-        print(f.read())
+  with open("sad.txt", mode="r")as my_file:
+    print(my_file.read())
 except FileNotFoundError:
-    print("File not found:", 'sample.txt')
+    print("file not found...")
