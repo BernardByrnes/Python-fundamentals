@@ -51,10 +51,16 @@ print(my_crazy_list)
 #~Yield
 def generator_function(num):
   for i in range(num):
-    yield i
+    yield i*2
 
 g = generator_function(100)
 print(next(g))
 print(next(g))
 print(next(g))
 print(next(g))
+
+def gen_fun(num):
+  for i in range(num):
+    yield i
+
+#generators are more performant than lists
