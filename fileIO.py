@@ -26,3 +26,13 @@ print(text)
 # with open('sample.txt', 'r', encoding='utf-8') as f:
 #     for line in f:
 #         print(line.rstrip('\n'))
+
+from pathlib import Path
+text = Path('sample.txt').read_text(encoding='utf-8')
+print(text)
+
+try:
+    with open('sample.txt', 'r', encoding='utf-8') as f:
+        print(f.read())
+except FileNotFoundError:
+    print("File not found:", 'sample.txt')
