@@ -49,18 +49,30 @@ print(my_crazy_list)
 # for item in generator_function(20):
 #   print(list(item))
 #~Yield
-def generator_function(num):
-  for i in range(num):
-    yield i*2
+# def generator_function(num):
+#   for i in range(num):
+#     yield i*2
 
-g = generator_function(100)
-print(next(g))
-print(next(g))
-print(next(g))
-print(next(g))
+# g = generator_function(100)
+# print(next(g))
+# print(next(g))
+# print(next(g))
+# print(next(g))
 
-def gen_fun(num):
-  for i in range(num):
-    yield i
+# def gen_fun(num):
+#   for i in range(num):
+#     yield i
 
 #generators are more performant than lists
+
+# def special_for(iterable):
+#   iterator = iter(iterable)
+  
+#~Debugging
+# import pdb
+  
+# def add (num1,num2):
+#     pdb.set_trace()
+#     return num1 + num2
+  
+# print(add(3,"hih"))
