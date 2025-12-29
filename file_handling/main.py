@@ -31,14 +31,16 @@ import csv
 #   "job": "cook"
 # }
 
-employees = [[],[],[],[],]
+employees = [["Name","Age","Job"],["Spongebob",30,"cook"],["Patrick",37,"Unemployed"],["sandy", 27, "Scientist"],]
 
-file_path = "C:/Users/Ben/Desktop/gif/python-tutorials/output.json"
+file_path = "C:/Users/Ben/Desktop/gif/python-tutorials/output.csv"
 
 try:
-    with open(file=file_path, mode="w") as file:
-        json.dump(employee,file, indent=4)
+    with open(file=file_path, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        for row in employees:
+          writer.writerow(row)
           # file.write(employee + "\n")
-        print(f"json file '{file_path}' was created")
+        print(f"csv file '{file_path}' was created")
 except FileExistsError:
     print("That file already exists")
