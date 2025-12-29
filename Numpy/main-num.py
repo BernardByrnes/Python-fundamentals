@@ -26,7 +26,7 @@ import numpy as np
 # word = array[0,0,2] + array[2,0,2] + array[1,2,0]
 # print(word)
 
-# =========================================================
+# ====================ROW AND COLUMN SELECTION=====================================
 
 array = np.array([[1,2,3,4],
                   [5,6,7,8],
@@ -34,4 +34,20 @@ array = np.array([[1,2,3,4],
                   [13,14,15,16]])
 
 # array[start:end:step]
-print(array[0])
+# print(array[0:4:2])
+# print(array[::2])
+# print(array[::-1])
+
+
+#columns 
+# print(array[:,0])
+# print(array[:,-2])
+# print(array[:,1:4])
+# print(array[:,1:])
+# print(array[:, ::2])
+
+#ROWS AND COLUMNS
+# print(array[0:2,0:2]) 
+# print(array[0:2,2:]) 
+# print(array[2:4,2:]) 
+
