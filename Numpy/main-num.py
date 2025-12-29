@@ -51,3 +51,19 @@ array = np.array([[1,2,3,4],
 # print(array[0:2,2:]) 
 # print(array[2:4,2:]) 
 
+#~Arithmetic
+#scalar arithmetic
+
+array = np.array([1,2,3,4])
+array2 = np.array([1.4,2.7,3.3,4.7])
+
+# print(array + 2)
+# print(array * 2)
+# print(array / 3)
+# print(array ** 5)
+
+
+#Vectorized math func
+
+print(np.sqrt(array))
+print(np.round(array2))
