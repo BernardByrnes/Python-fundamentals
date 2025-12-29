@@ -71,16 +71,16 @@
 # except PermissionError:
 #   print("You do not have permission to read that file")
 # ==============================CSV==================================  # 
-import csv
+# import csv
 
-file_path = "C:/Users/Ben/Desktop/gif/python-tutorials/output.csv"
+# file_path = "C:/Users/Ben/Desktop/gif/python-tutorials/output.csv"
 
-try:
-    with open(file_path , mode='r') as file:
-          content = csv.reader(file)
-          for line in content:
-            print(line)
-except FileNotFoundError:
-  print("That file was not found")
-except PermissionError:
-  print("You do not have permission to read that file")
+# try:
+#     with open(file_path , mode='r') as file:
+#           content = csv.reader(file)
+#           for line in content:
+#             print(line)
+# except FileNotFoundError:
+#   print("That file was not found")
+# except PermissionError:
+#   print("You do not have permission to read that file")
