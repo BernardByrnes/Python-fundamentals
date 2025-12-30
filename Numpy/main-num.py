@@ -116,15 +116,28 @@ import numpy as np
 
 #~FILTERING
 
-ages = np.array([[21,17,19,23,19,30,20],
-                [30,15,16,17,19,20,30]])
+# ages = np.array([[21,17,19,23,19,30,20],
+#                 [30,15,16,17,19,20,30]])
 
-teenagers = ages[ages<20]
-adults = ages[(ages>=18) & (ages <65)]
-kids = ages[ages<18]
-evens = ages[ages % 2 ==0]
+# teenagers = ages[ages<20]
+# adults = ages[(ages>=18) & (ages <65)]
+# kids = ages[ages<18]
+# evens = ages[ages % 2 ==0]
 
-# print(teenagers)
+# # print(teenagers)
+# # print(adults)
+# print(kids)
+# print(evens)
+
+# adults =np.where(ages >=18, ages, 0)
 # print(adults)
-print(kids)
-print(evens)
+
+#~RANDOM NUMBERs
+
+# rng = np.random.default_rng()
+# rng = np.random.default_rng(seed=1)
+# print(rng.integers(low=1,high=101,size=(3,2)))
+
+# ============================floating numbers===========================
+
+print(np.random.uniform())
