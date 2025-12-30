@@ -90,10 +90,22 @@ import numpy as np
 # print(scores < 70)
 
 #~broadcasting
-array4 = np.array([[1,2,3,4]])
-array5 = np.array([[1],[2],[3],[4]])
+# array4 = np.array([[1,2,3,4]])
+# array5 = np.array([[1],[2],[3],[4]])
 
-print(array4.shape)
-print(array5.shape)
+# print(array4.shape)
+# print(array5.shape)
 
-print(array4 * array5)
+# print(array4 * array5)
+
+#~aggregation
+
+array3= np.array([[1,2,3,4,5],
+          [6,7,8,9,10]])
+
+print(np.sum(array3))
+print(np.mean(array3))
+print(np.std(array3))
+print(np.var(array3))
+print(np.min(array3))
+print(np.max(array3))
