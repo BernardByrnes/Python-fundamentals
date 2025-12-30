@@ -98,14 +98,33 @@ import numpy as np
 
 # print(array4 * array5)
 
-#~aggregation
+#~aggregation functions
 
-array3= np.array([[1,2,3,4,5],
-          [6,7,8,9,10]])
+# array3= np.array([[1,2,3,4,5],
+#           [6,7,8,9,10]])
 
-print(np.sum(array3))
-print(np.mean(array3))
-print(np.std(array3))
-print(np.var(array3))
-print(np.min(array3))
-print(np.max(array3))
+# print(np.sum(array3))
+# print(np.mean(array3))
+# print(np.std(array3))
+# print(np.var(array3))
+# print(np.min(array3))
+# print(np.max(array3))
+# print(np.argmax(array3))
+
+#print(np.sum(array3, axis=0)) #sum all the columns
+#print(np.sum(array3, axis=1)) #sum all the rows
+
+#~FILTERING
+
+ages = np.array([[21,17,19,23,19,30,20],
+                [30,15,16,17,19,20,30]])
+
+teenagers = ages[ages<20]
+adults = ages[(ages>=18) & (ages <65)]
+kids = ages[ages<18]
+evens = ages[ages % 2 ==0]
+
+# print(teenagers)
+# print(adults)
+print(kids)
+print(evens)
