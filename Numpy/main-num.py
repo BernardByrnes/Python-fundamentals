@@ -28,10 +28,10 @@ import numpy as np
 
 # ====================ROW AND COLUMN SELECTION=====================================
 
-array = np.array([[1,2,3,4],
-                  [5,6,7,8],
-                  [9,10,11,12],
-                  [13,14,15,16]])
+# array = np.array([[1,2,3,4],
+#                   [5,6,7,8],
+#                   [9,10,11,12],
+#                   [13,14,15,16]])
 
 # array[start:end:step]
 # print(array[0:4:2])
@@ -52,10 +52,10 @@ array = np.array([[1,2,3,4],
 # print(array[2:4,2:]) 
 
 #~Arithmetic
-#scalar arithmetic
+#^scalar arithmetic
 
-array = np.array([1,2,3,4])
-array2 = np.array([1.4,2.7,3.3,4.7])
+# array = np.array([1,2,3,4])
+# array2 = np.array([1.4,2.7,3.3,4.7])
 
 # print(array + 2)
 # print(array * 2)
@@ -63,7 +63,37 @@ array2 = np.array([1.4,2.7,3.3,4.7])
 # print(array ** 5)
 
 
-#Vectorized math func
+#^Vectorized math func
 
-print(np.sqrt(array))
-print(np.round(array2))
+# print(np.sqrt(array))
+# print(np.round(array2))
+# print(np.floor(array2))
+# print(np.ceil(array2))
+# print(np.pi)
+
+# radii = np.array([1,2,3])
+# print(np.pi * (radii ** 2))
+
+#^Element-wise arithmetic
+
+# array1 = np.array([1,2,3])
+# array2 = np.array([4,5,6])
+
+# print(array1 + array2)
+
+# scores = np.array([92,94,84,100,30 ,50, 72,68])
+# scores[scores<60]=0
+
+# print(scores)
+
+# print(scores > 90)
+# print(scores < 70)
+
+#~broadcasting
+array4 = np.array([[1,2,3,4]])
+array5 = np.array([[1],[2],[3],[4]])
+
+print(array4.shape)
+print(array5.shape)
+
+print(array4 * array5)
