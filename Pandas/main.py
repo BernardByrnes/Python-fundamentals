@@ -72,7 +72,8 @@ sys.stdout.reconfigure(encoding="utf-8")
 #&BY COLUMN
 
 df = pd.read_csv(
-    r"C:\Users\Ben\Desktop\gif\python-tutorials\Pandas\sample_data1.csv", index_col="Name")
+    # r"C:\Users\Ben\Desktop\gif\python-tutorials\Pandas\sample_data1.csv", index_col="Name")
+    r"C:\Users\Ben\Desktop\gif\python-tutorials\Pandas\sample_data1.csv")
 # print(df["Name"].to_string())
 # print(df["Height"].to_string())
 # print(df["Weight"].to_string())
@@ -113,9 +114,21 @@ water_pokemon = df[df["Type1"]=="Water"]
 
 # GROUP BY
 
-group = df.groupby("Type1")
+# group = df.groupby("Type1")
 # print(group["Height"].mean())
 # print(group["Height"].sum())
 # print(group["Height"].min())
 # print(group["Height"].max())
-print(group["Height"].count())
+# print(group["Height"].count())
+
+#=================================DATA CLEANING==============================
+# df = df.drop(columns=["Legendary", "No"])
+# df = df.dropna(subset=["Type2"])
+# df = df.fillna({"Type2": "None"})
+
+# df["Type1"] = df["Type1"].replace({"Grass": "GRASS", "Fire": "FIRE", "Water": "WATER"})
+
+# df["Name"] = df["Name"].str.lower()
+# df["Legendary"] = df["Legendary"].astype(bool)
+
+print(df.to_string())
