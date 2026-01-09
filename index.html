@@ -1,0 +1,2397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASC LMS - Course Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables - Design System - ORANGE THEME */
+        :root {
+            --primary-600: #ffa424;
+            --primary-500: #ffb74d;
+            --primary-400: #ffcc80;
+            --accent-500: #f97316;
+            --accent-400: #fb923c;
+            --neutral-50: #fafafa;
+            --neutral-100: #f4f4f5;
+            --neutral-200: #e4e4e7;
+            --neutral-300: #d4d4d8;
+            --neutral-400: #a1a1aa;
+            --neutral-500: #71717a;
+            --neutral-600: #52525b;
+            --neutral-700: #3f3f46;
+            --neutral-800: #27272a;
+            --neutral-900: #18181b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            
+            /* Light Theme Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* App Container */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Course Player Layout */
+        .player-container {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        /* Top Navigation Bar */
+        .player-topbar {
+            background: var(--bg-primary);
+            backdrop-filter: blur(10px);
+            padding: var(--space-4) var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            gap: var(--space-4);
+        }
+
+        .course-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            min-width: 0;
+            flex-shrink: 1;
+        }
+
+        .course-back {
+            color: var(--text-tertiary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--font-size-sm);
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .course-back:hover {
+            color: var(--primary-600);
+        }
+
+        .course-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            flex-shrink: 0;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-600);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #e59420;
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-500);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-600);
+            border: 1px solid var(--primary-500);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 164, 36, 0.1);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: var(--space-1) var(--space-3);
+            font-size: var(--font-size-xs);
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-secondary);
+            transform: translateY(-1px);
+            border-color: var(--primary-500);
+        }
+
+        /* Main Player Area */
+        .player-main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            background: var(--bg-secondary);
+        }
+
+        /* Video Player Section */
+        .video-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+            position: relative;
+            min-width: 0;
+        }
+
+        /* Video Container */
+        .video-container {
+            position: relative;
+            background: #000;
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            max-height: calc(100vh - 200px);
+            object-fit: contain;
+        }
+
+        /* Video Controls Overlay */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.6) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: var(--space-6);
+        }
+
+        .video-container:hover .video-overlay {
+            opacity: 1;
+        }
+
+        .video-top-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-bottom-controls {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-600);
+            border-radius: 3px;
+            width: 35%;
+            position: relative;
+            transition: width 0.1s;
+        }
+
+        .progress-handle {
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--primary-600);
+            border-radius: 50%;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .progress-container:hover .progress-handle {
+            display: block;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-sm);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Control Buttons */
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .left-controls,
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .play-button {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .play-button:hover {
+            background: #e59420;
+            transform: scale(1.05);
+        }
+
+        .control-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: var(--font-size-lg);
+            cursor: pointer;
+            padding: var(--space-2);
+            border-radius: var(--radius);
+            transition: background-color 0.2s;
+        }
+
+        .control-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Player Settings */
+        .settings-menu {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: var(--space-3);
+            min-width: 200px;
+            display: none;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .settings-menu.active {
+            display: block;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-2) var(--space-3);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: background-color 0.2s;
+        }
+
+        .settings-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .settings-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        /* Lesson Content Panel */
+        .lesson-content {
+            background: var(--bg-primary);
+            border-left: 1px solid var(--border-color);
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .lesson-content.collapsed {
+            width: 0;
+            border-left: none;
+            overflow: hidden;
+        }
+
+        .lesson-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: var(--space-4);
+            background: var(--bg-primary);
+        }
+
+        .lesson-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .lesson-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            font-size: var(--font-size-sm);
+            color: var(--text-tertiary);
+        }
+
+        .lesson-body {
+            flex: 1;
+            padding: var(--space-6);
+            overflow-y: auto;
+        }
+
+        /* Content Types */
+        .content-text {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .content-text h2 {
+            color: var(--text-primary);
+            margin-bottom: var(--space-4);
+            font-size: var(--font-size-lg);
+            margin-top: var(--space-6);
+        }
+
+        .content-text h2:first-child {
+            margin-top: 0;
+        }
+
+        .content-text p {
+            margin-bottom: var(--space-4);
+        }
+
+        .content-text ul, .content-text ol {
+            margin-left: var(--space-6);
+            margin-bottom: var(--space-4);
+        }
+
+        .content-text li {
+            margin-bottom: var(--space-2);
+        }
+
+        /* PDF Viewer */
+        .pdf-viewer {
+            width: 100%;
+            height: 600px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .pdf-placeholder {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            color: var(--text-tertiary);
+            padding: var(--space-8);
+        }
+
+        .pdf-placeholder i {
+            font-size: 48px;
+            margin-bottom: var(--space-4);
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            padding: var(--space-6);
+            margin-top: var(--space-4);
+        }
+
+        .quiz-question {
+            font-size: var(--font-size-lg);
+            color: var(--text-primary);
+            margin-bottom: var(--space-6);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: var(--bg-secondary);
+            border-color: var(--primary-500);
+        }
+
+        .quiz-option.selected {
+            background: rgba(255, 164, 36, 0.1);
+            border-color: var(--primary-600);
+        }
+
+        .option-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .quiz-option.selected .option-marker {
+            background: var(--primary-600);
+            border-color: var(--primary-600);
+        }
+
+        .quiz-option.selected .option-marker::after {
+            content: '';
+            color: white;
+            font-size: 12px;
+        }
+
+        .quiz-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-6);
+        }
+
+        /* Assignment Submission */
+        .assignment-container {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            padding: var(--space-6);
+        }
+
+        .assignment-instructions {
+            margin-bottom: var(--space-6);
+        }
+
+        .assignment-instructions h3 {
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius);
+            padding: var(--space-8);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: var(--space-6);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary-500);
+            background: rgba(255, 164, 36, 0.05);
+        }
+
+        .upload-icon {
+            font-size: var(--font-size-3xl);
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-3);
+        }
+
+        /* Lesson Navigation */
+        .lesson-navigation {
+            padding: var(--space-6);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-primary);
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        /* Sidebar Curriculum */
+        .curriculum-sidebar {
+            width: 320px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .curriculum-sidebar.collapsed {
+            transform: translateX(-100%);
+            position: absolute;
+            height: 100%;
+            z-index: 900;
+        }
+
+        .curriculum-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .curriculum-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-summary {
+            padding: var(--space-4) var(--space-6);
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(255, 164, 36, 0.08) 0%, rgba(255, 164, 36, 0.03) 100%);
+        }
+
+        .progress-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-2);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar-small {
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: var(--space-2);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-600), var(--accent-500));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-percentage {
+            font-size: var(--font-size-sm);
+            color: var(--primary-600);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Curriculum List */
+        .curriculum-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-4);
+        }
+
+        .module-item {
+            margin-bottom: var(--space-4);
+        }
+
+        .module-header {
+            padding: var(--space-3) var(--space-4);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .module-header:hover {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+
+        .module-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .module-stats {
+            font-size: var(--font-size-xs);
+            color: var(--text-tertiary);
+            background: var(--bg-primary);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+        }
+
+        .lesson-list {
+            padding-left: var(--space-4);
+            margin-top: var(--space-2);
+            display: none;
+        }
+
+        .module-item.expanded .lesson-list {
+            display: block;
+        }
+
+        .lesson-list-item {
+            padding: var(--space-3) var(--space-4);
+            margin-bottom: var(--space-2);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .lesson-list-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .lesson-list-item.active {
+            background: rgba(255, 164, 36, 0.1);
+            border-color: var(--primary-500);
+        }
+
+        .lesson-list-item.completed .lesson-icon {
+            background: var(--success);
+        }
+
+        .lesson-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xs);
+            flex-shrink: 0;
+        }
+
+        .lesson-list-item.completed .lesson-icon {
+            color: white;
+        }
+
+        .lesson-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .lesson-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: var(--font-size-sm);
+        }
+
+        .lesson-duration {
+            font-size: var(--font-size-xs);
+            color: var(--text-tertiary);
+        }
+
+        /* Discussion Panel */
+        .discussion-panel {
+            background: var(--bg-primary);
+            border-left: 1px solid var(--border-color);
+            width: 380px;
+            display: none;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .discussion-panel.active {
+            display: flex;
+        }
+
+        .discussion-panel.collapsed {
+            width: 0;
+            border-left: none;
+            overflow: hidden;
+        }
+
+        .discussion-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .discussion-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .discussion-body {
+            flex: 1;
+            padding: var(--space-6);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .discussion-input {
+            padding: var(--space-6);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .discussion-form {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .discussion-input-field {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: var(--font-size-sm);
+        }
+
+        .discussion-input-field:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            background: var(--bg-primary);
+        }
+
+        /* Resource Panel */
+        .resource-panel {
+            background: var(--bg-primary);
+            border-left: 1px solid var(--border-color);
+            width: 320px;
+            display: none;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .resource-panel.active {
+            display: flex;
+        }
+
+        .resource-panel.collapsed {
+            width: 0;
+            border-left: none;
+            overflow: hidden;
+        }
+
+        .resource-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .resource-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .resource-list {
+            flex: 1;
+            padding: var(--space-6);
+            overflow-y: auto;
+        }
+
+        .resource-item {
+            padding: var(--space-4);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            margin-bottom: var(--space-3);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .resource-item:hover {
+            background: var(--bg-secondary);
+            border-color: var(--primary-500);
+            transform: translateX(4px);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+            padding: var(--space-2);
+        }
+
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 800;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Course Actions */
+        .course-actions {
+            padding: var(--space-6);
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        /* ===========================================
+           RESPONSIVE DESIGN - IMPROVED
+           =========================================== */
+
+        /* Extra Large Screens (1920px and above) */
+        @media (min-width: 1920px) {
+            .curriculum-sidebar {
+                width: 360px;
+            }
+            
+            .lesson-content {
+                width: 450px;
+            }
+            
+            .discussion-panel {
+                width: 420px;
+            }
+            
+            .resource-panel {
+                width: 360px;
+            }
+            
+            .video-container {
+                min-height: 600px;
+            }
+            
+            .player-topbar {
+                padding: var(--space-5) var(--space-8);
+            }
+        }
+
+        /* Large Screens (1440px to 1919px) */
+        @media (min-width: 1440px) and (max-width: 1919px) {
+            .curriculum-sidebar {
+                width: 340px;
+            }
+            
+            .lesson-content {
+                width: 400px;
+            }
+            
+            .discussion-panel {
+                width: 400px;
+            }
+            
+            .video-container {
+                min-height: 500px;
+            }
+        }
+
+        /* Desktop (1200px to 1439px) */
+        @media (min-width: 1200px) and (max-width: 1439px) {
+            .curriculum-sidebar {
+                width: 300px;
+            }
+            
+            .lesson-content {
+                width: 360px;
+            }
+            
+            .discussion-panel,
+            .resource-panel {
+                width: 340px;
+            }
+        }
+
+        /* Small Desktop / Large Tablet (1024px to 1199px) */
+        @media (min-width: 1024px) and (max-width: 1199px) {
+            .curriculum-sidebar {
+                width: 280px;
+            }
+            
+            .lesson-content {
+                width: 320px;
+            }
+            
+            .discussion-panel,
+            .resource-panel {
+                width: 300px;
+            }
+            
+            .player-controls .btn span {
+                display: none;
+            }
+            
+            .player-controls .btn i {
+                margin-right: 0;
+            }
+        }
+
+        /* Tablet (768px to 1023px) */
+        @media (max-width: 1023px) {
+            .curriculum-sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 1000;
+                transform: translateX(-100%);
+                width: 320px;
+                box-shadow: var(--shadow-xl);
+            }
+            
+            .curriculum-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .lesson-content,
+            .discussion-panel,
+            .resource-panel {
+                position: fixed;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 1000;
+                width: 100%;
+                max-width: 420px;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                box-shadow: var(--shadow-xl);
+                display: flex;
+            }
+            
+            .lesson-content.active,
+            .discussion-panel.active,
+            .resource-panel.active {
+                transform: translateX(0);
+            }
+            
+            .course-title {
+                max-width: 250px;
+            }
+            
+            .player-controls .btn {
+                padding: var(--space-2) var(--space-3);
+            }
+            
+            .player-controls .btn span {
+                display: none;
+            }
+        }
+
+        /* Mobile (up to 767px) */
+        @media (max-width: 767px) {
+            .player-topbar {
+                padding: var(--space-3) var(--space-4);
+                flex-wrap: wrap;
+            }
+            
+            .course-info {
+                order: 1;
+            }
+            
+            .player-controls {
+                order: 2;
+                gap: var(--space-2);
+            }
+            
+            .lesson-content,
+            .discussion-panel,
+            .resource-panel {
+                max-width: 100%;
+            }
+            
+            .video-title {
+                font-size: var(--font-size-lg);
+            }
+            
+            .course-title {
+                display: none;
+            }
+            
+            .video-container {
+                min-height: 250px;
+            }
+            
+            .video-overlay {
+                padding: var(--space-4);
+            }
+            
+            .left-controls,
+            .right-controls {
+                gap: var(--space-2);
+            }
+            
+            .play-button {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .control-button {
+                padding: var(--space-1);
+                font-size: var(--font-size-base);
+            }
+            
+            .volume-control input[type="range"] {
+                display: none;
+            }
+            
+            .lesson-header,
+            .lesson-body,
+            .lesson-navigation {
+                padding: var(--space-4);
+            }
+            
+            .curriculum-sidebar {
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+
+        /* Small Mobile (up to 480px) */
+        @media (max-width: 480px) {
+            .player-topbar {
+                padding: var(--space-2) var(--space-3);
+            }
+            
+            .player-controls {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: var(--space-2);
+            }
+            
+            .course-info {
+                width: 100%;
+            }
+            
+            .course-back span {
+                display: none;
+            }
+            
+            .video-container {
+                min-height: 200px;
+            }
+            
+            .control-buttons {
+                flex-wrap: wrap;
+                gap: var(--space-2);
+            }
+            
+            .left-controls {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: var(--space-2);
+            }
+            
+            .right-controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .lesson-title {
+                font-size: var(--font-size-lg);
+            }
+            
+            .progress-summary {
+                padding: var(--space-3) var(--space-4);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .completed .lesson-icon {
+            background: var(--success) !important;
+        }
+
+        /* Video Quality Selector */
+        .quality-selector {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: var(--space-3);
+            min-width: 150px;
+            display: none;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .quality-selector.active {
+            display: block;
+        }
+
+        .quality-option {
+            padding: var(--space-2) var(--space-3);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .quality-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .quality-option.active {
+            color: var(--primary-600);
+            background: rgba(255, 164, 36, 0.1);
+            font-weight: 500;
+        }
+
+        /* Speed Selector */
+        .speed-selector {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: var(--space-3);
+            min-width: 150px;
+            display: none;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .speed-selector.active {
+            display: block;
+        }
+
+        /* Empty State Styling */
+        .empty-state {
+            text-align: center;
+            color: var(--text-tertiary);
+            padding: var(--space-8);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: var(--space-4);
+            color: var(--border-color);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Curriculum Sidebar -->
+        <div class="curriculum-sidebar" id="curriculumSidebar">
+            <div class="curriculum-header">
+                <div class="curriculum-title">Course Content</div>
+                <button class="icon-btn" id="closeCurriculumBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Progress Summary -->
+            <div class="progress-summary">
+                <div class="progress-label">
+                    <span>Course Progress</span>
+                    <span>65%</span>
+                </div>
+                <div class="progress-bar-small">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <div class="progress-percentage">65% Complete</div>
+            </div>
+            
+            <!-- Curriculum List -->
+            <div class="curriculum-list">
+                <!-- Module 1 -->
+                <div class="module-item expanded">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <div class="module-title">
+                            <i class="fas fa-chevron-down"></i>
+                            <span>Module 1: React Fundamentals</span>
+                        </div>
+                        <div class="module-stats">4/4</div>
+                    </div>
+                    <div class="lesson-list">
+                        <div class="lesson-list-item completed active">
+                            <div class="lesson-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">Introduction to React Patterns</div>
+                                <div class="lesson-duration">45 min</div>
+                            </div>
+                        </div>
+                        <div class="lesson-list-item completed">
+                            <div class="lesson-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">React Hooks Deep Dive</div>
+                                <div class="lesson-duration">30 min</div>
+                            </div>
+                        </div>
+                        <div class="lesson-list-item">
+                            <div class="lesson-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">Quiz: React Fundamentals</div>
+                                <div class="lesson-duration">25 min</div>
+                            </div>
+                        </div>
+                        <div class="lesson-list-item">
+                            <div class="lesson-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">Project Setup Guide</div>
+                                <div class="lesson-duration">20 min</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Module 2 -->
+                <div class="module-item">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <div class="module-title">
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Module 2: Advanced Patterns</span>
+                        </div>
+                        <div class="module-stats">2/6</div>
+                    </div>
+                    <div class="lesson-list">
+                        <div class="lesson-list-item completed">
+                            <div class="lesson-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">Render Props Pattern</div>
+                                <div class="lesson-duration">35 min</div>
+                            </div>
+                        </div>
+                        <div class="lesson-list-item completed">
+                            <div class="lesson-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">Higher-Order Components</div>
+                                <div class="lesson-duration">40 min</div>
+                            </div>
+                        </div>
+                        <div class="lesson-list-item">
+                            <div class="lesson-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">Compound Components</div>
+                                <div class="lesson-duration">45 min</div>
+                            </div>
+                        </div>
+                        <div class="lesson-list-item">
+                            <div class="lesson-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">Custom Hooks</div>
+                                <div class="lesson-duration">50 min</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Module 3 -->
+                <div class="module-item">
+                    <div class="module-header" onclick="toggleModule(this)">
+                        <div class="module-title">
+                            <i class="fas fa-chevron-right"></i>
+                            <span>Module 3: Performance Optimization</span>
+                        </div>
+                        <div class="module-stats">0/5</div>
+                    </div>
+                    <div class="lesson-list">
+                        <div class="lesson-list-item">
+                            <div class="lesson-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">React.memo and useMemo</div>
+                                <div class="lesson-duration">30 min</div>
+                            </div>
+                        </div>
+                        <div class="lesson-list-item">
+                            <div class="lesson-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">Code Splitting</div>
+                                <div class="lesson-duration">35 min</div>
+                            </div>
+                        </div>
+                        <div class="lesson-list-item">
+                            <div class="lesson-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="lesson-details">
+                                <div class="lesson-name">Virtual Lists</div>
+                                <div class="lesson-duration">40 min</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Course Actions -->
+            <div class="course-actions">
+                <button class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-certificate"></i> <span>Get Certificate</span>
+                </button>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: var(--space-3);">
+                    <i class="fas fa-download"></i> <span>Download Resources</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Player Area -->
+        <div class="player-container">
+            <!-- Top Bar -->
+            <div class="player-topbar">
+                <div class="course-info">
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <a href="#" class="course-back" id="backToCourseBtn">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Course</span>
+                    </a>
+                    
+                    <div class="course-title" id="currentCourseTitle">Advanced React Patterns</div>
+                </div>
+                
+                <div class="player-controls">
+                    <button class="btn btn-secondary" id="notesBtn">
+                        <i class="fas fa-sticky-note"></i> <span>Notes</span>
+                    </button>
+                    <button class="btn btn-secondary" id="resourcesBtn">
+                        <i class="fas fa-download"></i> <span>Resources</span>
+                    </button>
+                    <button class="btn btn-secondary" id="discussionBtn">
+                        <i class="fas fa-comments"></i> <span>Discussion</span>
+                    </button>
+                    <button class="btn btn-primary" id="markCompleteBtn">
+                        <i class="fas fa-check-circle"></i> <span>Mark Complete</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Main Player -->
+            <div class="player-main">
+                <!-- Video Player Section -->
+                <div class="video-section">
+                    <!-- Video Container -->
+                    <div class="video-container">
+                        <video class="video-player" id="videoPlayer" poster="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        
+                        <!-- Video Controls Overlay -->
+                        <div class="video-overlay">
+                            <div class="video-top-controls">
+                                <div class="video-title" id="videoTitle">Introduction to Advanced React Patterns</div>
+                                <div class="icon-btn" id="fullscreenBtn" style="background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.2); color: white;">
+                                    <i class="fas fa-expand"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="video-bottom-controls">
+                                <!-- Progress Bar -->
+                                <div class="progress-container" id="progressContainer">
+                                    <div class="progress-bar" id="progressBar">
+                                        <div class="progress-handle"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Time Display -->
+                                <div class="time-display">
+                                    <span id="currentTime">00:00</span>
+                                    <span id="duration">45:00</span>
+                                </div>
+                                
+                                <!-- Control Buttons -->
+                                <div class="control-buttons">
+                                    <div class="left-controls">
+                                        <button class="play-button" id="playButton">
+                                            <i class="fas fa-play" id="playIcon"></i>
+                                        </button>
+                                        <button class="control-button" id="rewindBtn" title="Rewind 10s">
+                                            <i class="fas fa-backward"></i>
+                                        </button>
+                                        <button class="control-button" id="forwardBtn" title="Forward 10s">
+                                            <i class="fas fa-forward"></i>
+                                        </button>
+                                        <div class="volume-control" style="display: flex; align-items: center; gap: var(--space-2);">
+                                            <button class="control-button" id="volumeBtn" title="Toggle Mute">
+                                                <i class="fas fa-volume-up"></i>
+                                            </button>
+                                            <input type="range" id="volumeSlider" min="0" max="100" value="80" 
+                                                   style="width: 80px; accent-color: var(--primary-600);">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="right-controls">
+                                        <button class="control-button" id="speedBtn" title="Playback Speed">
+                                            <i class="fas fa-tachometer-alt"></i> 1x
+                                        </button>
+                                        <button class="control-button" id="qualityBtn" title="Quality">
+                                            <i class="fas fa-hd"></i> HD
+                                        </button>
+                                        <button class="control-button" id="settingsBtn" title="Settings">
+                                            <i class="fas fa-cog"></i>
+                                        </button>
+                                        <button class="control-button" id="pipBtn" title="Picture-in-Picture">
+                                            <i class="fas fa-compress"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Menu -->
+                    <div class="settings-menu" id="settingsMenu">
+                        <div class="settings-item" onclick="changeSpeed(0.5)">
+                            <div class="settings-label">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Playback Speed</span>
+                            </div>
+                            <div class="settings-value">1x</div>
+                        </div>
+                        <div class="settings-item" onclick="toggleSubtitles()">
+                            <div class="settings-label">
+                                <i class="fas fa-closed-captioning"></i>
+                                <span>Subtitles</span>
+                            </div>
+                            <div class="settings-value">Off</div>
+                        </div>
+                        <div class="settings-item" onclick="toggleAutoplay()">
+                            <div class="settings-label">
+                                <i class="fas fa-play-circle"></i>
+                                <span>Autoplay</span>
+                            </div>
+                            <div class="settings-value">On</div>
+                        </div>
+                        <div class="settings-item" onclick="toggleLoop()">
+                            <div class="settings-label">
+                                <i class="fas fa-redo"></i>
+                                <span>Loop</span>
+                            </div>
+                            <div class="settings-value">Off</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quality Selector -->
+                    <div class="quality-selector" id="qualitySelector">
+                        <div class="quality-option active" onclick="changeQuality('1080p')">1080p HD</div>
+                        <div class="quality-option" onclick="changeQuality('720p')">720p HD</div>
+                        <div class="quality-option" onclick="changeQuality('480p')">480p</div>
+                        <div class="quality-option" onclick="changeQuality('360p')">360p</div>
+                        <div class="quality-option" onclick="changeQuality('auto')">Auto</div>
+                    </div>
+                    
+                    <!-- Speed Selector -->
+                    <div class="speed-selector" id="speedSelector">
+                        <div class="quality-option" onclick="changeSpeed(0.25)">0.25x</div>
+                        <div class="quality-option" onclick="changeSpeed(0.5)">0.5x</div>
+                        <div class="quality-option" onclick="changeSpeed(0.75)">0.75x</div>
+                        <div class="quality-option active" onclick="changeSpeed(1)">1x Normal</div>
+                        <div class="quality-option" onclick="changeSpeed(1.25)">1.25x</div>
+                        <div class="quality-option" onclick="changeSpeed(1.5)">1.5x</div>
+                        <div class="quality-option" onclick="changeSpeed(2)">2x</div>
+                    </div>
+                </div>
+                
+                <!-- Lesson Content Panel -->
+                <div class="lesson-content" id="lessonContent">
+                    <div class="lesson-header">
+                        <div>
+                            <div class="lesson-title" id="lessonTitle">Introduction to Advanced React Patterns</div>
+                            <div class="lesson-meta">
+                                <span><i class="far fa-clock"></i> 45 minutes</span>
+                                <span><i class="fas fa-video"></i> Video Lesson</span>
+                            </div>
+                        </div>
+                        <button class="icon-btn" id="closeLessonBtn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="lesson-body">
+                        <!-- Video Description -->
+                        <div class="content-text">
+                            <h2>About This Lesson</h2>
+                            <p>In this lesson, you'll learn about advanced React patterns that senior developers use to build scalable and maintainable applications.</p>
+                            
+                            <h2>Key Concepts</h2>
+                            <ul>
+                                <li>Render Props pattern and its applications</li>
+                                <li>Higher-Order Components (HOCs) for code reuse</li>
+                                <li>Custom hooks for shared logic</li>
+                                <li>Compound components for flexible APIs</li>
+                                <li>Performance optimization techniques</li>
+                            </ul>
+                            
+                            <h2>Learning Objectives</h2>
+                            <p>By the end of this lesson, you'll be able to:</p>
+                            <ol>
+                                <li>Implement render props in your React applications</li>
+                                <li>Create reusable higher-order components</li>
+                                <li>Design custom hooks for shared business logic</li>
+                                <li>Apply performance optimization patterns</li>
+                            </ol>
+                        </div>
+                        
+                        <!-- Resources Section -->
+                        <div style="margin-top: var(--space-8);">
+                            <h3 style="color: var(--text-primary); margin-bottom: var(--space-4);">
+                                <i class="fas fa-download"></i> Resources
+                            </h3>
+                            <div class="resource-item">
+                                <div style="font-weight: 600; margin-bottom: var(--space-1); color: var(--text-primary);">Lesson Slides (PDF)</div>
+                                <div style="font-size: var(--font-size-sm); color: var(--text-tertiary);">2.4 MB · Updated Dec 2025</div>
+                            </div>
+                            <div class="resource-item">
+                                <div style="font-weight: 600; margin-bottom: var(--space-1); color: var(--text-primary);">Source Code Examples</div>
+                                <div style="font-size: var(--font-size-sm); color: var(--text-tertiary);">GitHub Repository · 15 files</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Lesson Navigation -->
+                    <div class="lesson-navigation">
+                        <button class="btn btn-secondary nav-button" id="prevLessonBtn">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button class="btn btn-primary nav-button" id="nextLessonBtn">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Discussion Panel -->
+                <div class="discussion-panel" id="discussionPanel">
+                    <div class="discussion-header">
+                        <div class="discussion-title">Lesson Discussion</div>
+                        <button class="icon-btn" id="closeDiscussionBtn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="discussion-body">
+                        <!-- Discussion messages would go here -->
+                        <div class="empty-state">
+                            <i class="fas fa-comments"></i>
+                            <div>No discussions yet. Start the conversation!</div>
+                        </div>
+                    </div>
+                    <div class="discussion-input">
+                        <div class="discussion-form">
+                            <input type="text" class="discussion-input-field" placeholder="Ask a question or share a thought...">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Resource Panel -->
+                <div class="resource-panel" id="resourcePanel">
+                    <div class="resource-header">
+                        <div class="resource-title">Course Resources</div>
+                        <button class="icon-btn" id="closeResourceBtn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="resource-list">
+                        <div class="resource-item">
+                            <div style="font-weight: 600; margin-bottom: var(--space-1); color: var(--text-primary);">Complete Course Slides</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--text-tertiary);">PDF · 45 pages</div>
+                        </div>
+                        <div class="resource-item">
+                            <div style="font-weight: 600; margin-bottom: var(--space-1); color: var(--text-primary);">Project Source Code</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--text-tertiary);">GitHub · 7 projects</div>
+                        </div>
+                        <div class="resource-item">
+                            <div style="font-weight: 600; margin-bottom: var(--space-1); color: var(--text-primary);">Cheat Sheets</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--text-tertiary);">PDF · React Patterns</div>
+                        </div>
+                        <div class="resource-item">
+                            <div style="font-weight: 600; margin-bottom: var(--space-1); color: var(--text-primary);">Additional Reading</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--text-tertiary);">10 articles & tutorials</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const videoPlayer = document.getElementById('videoPlayer');
+            const playButton = document.getElementById('playButton');
+            const playIcon = document.getElementById('playIcon');
+            const progressBar = document.getElementById('progressBar');
+            const progressContainer = document.getElementById('progressContainer');
+            const currentTimeDisplay = document.getElementById('currentTime');
+            const durationDisplay = document.getElementById('duration');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const volumeBtn = document.getElementById('volumeBtn');
+            const settingsBtn = document.getElementById('settingsBtn');
+            const settingsMenu = document.getElementById('settingsMenu');
+            const qualityBtn = document.getElementById('qualityBtn');
+            const qualitySelector = document.getElementById('qualitySelector');
+            const speedBtn = document.getElementById('speedBtn');
+            const speedSelector = document.getElementById('speedSelector');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const pipBtn = document.getElementById('pipBtn');
+            const rewindBtn = document.getElementById('rewindBtn');
+            const forwardBtn = document.getElementById('forwardBtn');
+            
+            // Panel Elements
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const curriculumSidebar = document.getElementById('curriculumSidebar');
+            const closeCurriculumBtn = document.getElementById('closeCurriculumBtn');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const lessonContent = document.getElementById('lessonContent');
+            const closeLessonBtn = document.getElementById('closeLessonBtn');
+            const discussionPanel = document.getElementById('discussionPanel');
+            const discussionBtn = document.getElementById('discussionBtn');
+            const closeDiscussionBtn = document.getElementById('closeDiscussionBtn');
+            const resourcePanel = document.getElementById('resourcePanel');
+            const resourcesBtn = document.getElementById('resourcesBtn');
+            const closeResourceBtn = document.getElementById('closeResourceBtn');
+            
+            // Navigation Elements
+            const backToCourseBtn = document.getElementById('backToCourseBtn');
+            const markCompleteBtn = document.getElementById('markCompleteBtn');
+            const prevLessonBtn = document.getElementById('prevLessonBtn');
+            const nextLessonBtn = document.getElementById('nextLessonBtn');
+            
+            // Video State
+            let isPlaying = false;
+            let currentSpeed = 1;
+            let currentQuality = '1080p';
+            
+            // Initialize video player
+            videoPlayer.volume = volumeSlider.value / 100;
+            
+            // Play/Pause functionality
+            playButton.addEventListener('click', togglePlay);
+            videoPlayer.addEventListener('click', togglePlay);
+            
+            function togglePlay() {
+                if (videoPlayer.paused) {
+                    videoPlayer.play();
+                    isPlaying = true;
+                    playIcon.classList.remove('fa-play');
+                    playIcon.classList.add('fa-pause');
+                } else {
+                    videoPlayer.pause();
+                    isPlaying = false;
+                    playIcon.classList.remove('fa-pause');
+                    playIcon.classList.add('fa-play');
+                }
+            }
+            
+            // Update progress bar
+            videoPlayer.addEventListener('timeupdate', updateProgress);
+            
+            function updateProgress() {
+                const percent = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+                progressBar.style.width = `${percent}%`;
+                
+                // Update time displays
+                currentTimeDisplay.textContent = formatTime(videoPlayer.currentTime);
+                durationDisplay.textContent = formatTime(videoPlayer.duration);
+            }
+            
+            // Format time (seconds to MM:SS)
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return '00:00';
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            // Seek functionality
+            progressContainer.addEventListener('click', seek);
+            
+            function seek(e) {
+                const rect = progressContainer.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                videoPlayer.currentTime = pos * videoPlayer.duration;
+            }
+            
+            // Rewind/Forward buttons
+            rewindBtn.addEventListener('click', function() {
+                videoPlayer.currentTime -= 10;
+            });
+            
+            forwardBtn.addEventListener('click', function() {
+                videoPlayer.currentTime += 10;
+            });
+            
+            // Volume control
+            volumeSlider.addEventListener('input', function() {
+                videoPlayer.volume = this.value / 100;
+                updateVolumeIcon();
+            });
+            
+            volumeBtn.addEventListener('click', function() {
+                if (videoPlayer.volume > 0) {
+                    videoPlayer.volume = 0;
+                    volumeSlider.value = 0;
+                } else {
+                    videoPlayer.volume = 0.8;
+                    volumeSlider.value = 80;
+                }
+                updateVolumeIcon();
+            });
+            
+            function updateVolumeIcon() {
+                const icon = volumeBtn.querySelector('i');
+                if (videoPlayer.volume === 0) {
+                    icon.classList.remove('fa-volume-up', 'fa-volume-down');
+                    icon.classList.add('fa-volume-mute');
+                } else if (videoPlayer.volume < 0.5) {
+                    icon.classList.remove('fa-volume-up', 'fa-volume-mute');
+                    icon.classList.add('fa-volume-down');
+                } else {
+                    icon.classList.remove('fa-volume-down', 'fa-volume-mute');
+                    icon.classList.add('fa-volume-up');
+                }
+            }
+            
+            // Settings menu
+            settingsBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                settingsMenu.classList.toggle('active');
+                qualitySelector.classList.remove('active');
+                speedSelector.classList.remove('active');
+            });
+            
+            // Quality selector
+            qualityBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                qualitySelector.classList.toggle('active');
+                settingsMenu.classList.remove('active');
+                speedSelector.classList.remove('active');
+            });
+            
+            // Speed selector
+            speedBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                speedSelector.classList.toggle('active');
+                settingsMenu.classList.remove('active');
+                qualitySelector.classList.remove('active');
+            });
+            
+            // Close menus when clicking outside
+            document.addEventListener('click', function() {
+                settingsMenu.classList.remove('active');
+                qualitySelector.classList.remove('active');
+                speedSelector.classList.remove('active');
+            });
+            
+            // Fullscreen functionality
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+            
+            function toggleFullscreen() {
+                const videoContainer = videoPlayer.parentElement;
+                
+                if (!document.fullscreenElement) {
+                    if (videoContainer.requestFullscreen) {
+                        videoContainer.requestFullscreen();
+                    } else if (videoContainer.webkitRequestFullscreen) {
+                        videoContainer.webkitRequestFullscreen();
+                    } else if (videoContainer.msRequestFullscreen) {
+                        videoContainer.msRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
+            }
+            
+            // Picture-in-Picture
+            pipBtn.addEventListener('click', togglePiP);
+            
+            async function togglePiP() {
+                try {
+                    if (videoPlayer !== document.pictureInPictureElement) {
+                        await videoPlayer.requestPictureInPicture();
+                    } else {
+                        await document.exitPictureInPicture();
+                    }
+                } catch (error) {
+                    console.error('PiP error:', error);
+                }
+            }
+            
+            // Change playback speed
+            window.changeSpeed = function(speed) {
+                videoPlayer.playbackRate = speed;
+                currentSpeed = speed;
+                speedBtn.innerHTML = `<i class="fas fa-tachometer-alt"></i> ${speed}x`;
+                speedSelector.querySelectorAll('.quality-option').forEach(option => {
+                    option.classList.remove('active');
+                });
+                const activeOption = speedSelector.querySelector(`.quality-option[onclick="changeSpeed(${speed})"]`);
+                if (activeOption) activeOption.classList.add('active');
+                speedSelector.classList.remove('active');
+            };
+            
+            // Change quality
+            window.changeQuality = function(quality) {
+                currentQuality = quality;
+                qualityBtn.innerHTML = `<i class="fas fa-hd"></i> ${quality === '1080p' || quality === '720p' ? 'HD' : quality}`;
+                qualitySelector.querySelectorAll('.quality-option').forEach(option => {
+                    option.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                qualitySelector.classList.remove('active');
+                
+                // In a real app, this would switch video source
+                console.log(`Switching to ${quality} quality...`);
+            };
+            
+            // Toggle subtitles
+            window.toggleSubtitles = function() {
+                const item = event.target.closest('.settings-item');
+                const valueSpan = item.querySelector('.settings-value');
+                valueSpan.textContent = valueSpan.textContent === 'Off' ? 'On' : 'Off';
+            };
+            
+            // Toggle autoplay
+            window.toggleAutoplay = function() {
+                const item = event.target.closest('.settings-item');
+                const valueSpan = item.querySelector('.settings-value');
+                valueSpan.textContent = valueSpan.textContent === 'Off' ? 'On' : 'Off';
+            };
+            
+            // Toggle loop
+            window.toggleLoop = function() {
+                const item = event.target.closest('.settings-item');
+                const valueSpan = item.querySelector('.settings-value');
+                valueSpan.textContent = valueSpan.textContent === 'Off' ? 'On' : 'Off';
+                videoPlayer.loop = !videoPlayer.loop;
+            };
+            
+            // Sidebar toggle
+            mobileMenuToggle.addEventListener('click', function() {
+                curriculumSidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+            
+            closeCurriculumBtn.addEventListener('click', function() {
+                curriculumSidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+            
+            sidebarOverlay.addEventListener('click', function() {
+                curriculumSidebar.classList.remove('active');
+                this.classList.remove('active');
+                lessonContent.classList.remove('active');
+                discussionPanel.classList.remove('active');
+                resourcePanel.classList.remove('active');
+            });
+            
+            // Close panels on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    lessonContent.classList.remove('active');
+                    discussionPanel.classList.remove('active');
+                    resourcePanel.classList.remove('active');
+                    curriculumSidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+            
+            closeLessonBtn.addEventListener('click', function() {
+                lessonContent.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+            
+            // Discussion panel
+            discussionBtn.addEventListener('click', function() {
+                const isActive = discussionPanel.classList.contains('active');
+                // Close other panels
+                lessonContent.classList.remove('active');
+                resourcePanel.classList.remove('active');
+                
+                if (!isActive) {
+                    discussionPanel.classList.add('active');
+                    if (window.innerWidth < 1024) {
+                        sidebarOverlay.classList.add('active');
+                    }
+                } else {
+                    discussionPanel.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+            
+            closeDiscussionBtn.addEventListener('click', function() {
+                discussionPanel.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+            
+            // Resource panel
+            resourcesBtn.addEventListener('click', function() {
+                const isActive = resourcePanel.classList.contains('active');
+                // Close other panels
+                lessonContent.classList.remove('active');
+                discussionPanel.classList.remove('active');
+                
+                if (!isActive) {
+                    resourcePanel.classList.add('active');
+                    if (window.innerWidth < 1024) {
+                        sidebarOverlay.classList.add('active');
+                    }
+                } else {
+                    resourcePanel.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+            
+            closeResourceBtn.addEventListener('click', function() {
+                resourcePanel.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+            
+            // Navigation buttons
+            backToCourseBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Returning to course dashboard...');
+            });
+            
+            markCompleteBtn.addEventListener('click', function() {
+                const currentLesson = document.querySelector('.lesson-list-item.active');
+                if (currentLesson && !currentLesson.classList.contains('completed')) {
+                    currentLesson.classList.add('completed');
+                    markCompleteBtn.innerHTML = '<i class="fas fa-check-circle"></i> <span>Completed</span>';
+                    markCompleteBtn.classList.remove('btn-primary');
+                    markCompleteBtn.classList.add('btn-success');
+                    markCompleteBtn.disabled = true;
+                    
+                    // Update progress
+                    const progressFill = document.querySelector('.progress-fill');
+                    const currentWidth = parseInt(progressFill.style.width);
+                    progressFill.style.width = `${Math.min(currentWidth + 8, 100)}%`;
+                    
+                    // Update progress label
+                    const progressLabel = document.querySelector('.progress-label span:last-child');
+                    const progressPercentage = document.querySelector('.progress-percentage');
+                    const newProgress = Math.min(currentWidth + 8, 100);
+                    progressLabel.textContent = `${newProgress}%`;
+                    progressPercentage.textContent = `${newProgress}% Complete`;
+                }
+            });
+            
+            prevLessonBtn.addEventListener('click', function() {
+                navigateLesson('prev');
+            });
+            
+            nextLessonBtn.addEventListener('click', function() {
+                navigateLesson('next');
+            });
+            
+            function navigateLesson(direction) {
+                const allLessons = document.querySelectorAll('.lesson-list-item');
+                const currentIndex = Array.from(allLessons).findIndex(item => item.classList.contains('active'));
+                
+                let newIndex;
+                if (direction === 'next') {
+                    newIndex = currentIndex < allLessons.length - 1 ? currentIndex + 1 : currentIndex;
+                } else {
+                    newIndex = currentIndex > 0 ? currentIndex - 1 : currentIndex;
+                }
+                
+                if (newIndex !== currentIndex) {
+                    allLessons[newIndex].click();
+                }
+            }
+            
+            // Toggle module expansion
+            window.toggleModule = function(moduleHeader) {
+                const moduleItem = moduleHeader.closest('.module-item');
+                const chevron = moduleHeader.querySelector('i');
+                
+                moduleItem.classList.toggle('expanded');
+                if (moduleItem.classList.contains('expanded')) {
+                    chevron.classList.remove('fa-chevron-right');
+                    chevron.classList.add('fa-chevron-down');
+                } else {
+                    chevron.classList.remove('fa-chevron-down');
+                    chevron.classList.add('fa-chevron-right');
+                }
+            };
+            
+            // Lesson selection
+            const lessonItems = document.querySelectorAll('.lesson-list-item');
+            lessonItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (!this.classList.contains('active')) {
+                        lessonItems.forEach(i => i.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        const lessonName = this.querySelector('.lesson-name').textContent;
+                        const lessonType = this.querySelector('.lesson-icon i').className;
+                        
+                        document.getElementById('lessonTitle').textContent = lessonName;
+                        document.getElementById('videoTitle').textContent = lessonName;
+                        
+                        // Show lesson content panel on mobile
+                        if (window.innerWidth < 1024) {
+                            lessonContent.classList.add('active');
+                            discussionPanel.classList.remove('active');
+                            resourcePanel.classList.remove('active');
+                            sidebarOverlay.classList.add('active');
+                            curriculumSidebar.classList.remove('active');
+                        }
+                        
+                        // Reset mark complete button if needed
+                        if (this.classList.contains('completed')) {
+                            markCompleteBtn.innerHTML = '<i class="fas fa-check-circle"></i> <span>Completed</span>';
+                            markCompleteBtn.classList.remove('btn-primary');
+                            markCompleteBtn.classList.add('btn-success');
+                            markCompleteBtn.disabled = true;
+                        } else {
+                            markCompleteBtn.innerHTML = '<i class="fas fa-check-circle"></i> <span>Mark Complete</span>';
+                            markCompleteBtn.classList.remove('btn-success');
+                            markCompleteBtn.classList.add('btn-primary');
+                            markCompleteBtn.disabled = false;
+                        }
+                        
+                        // Update video if it's a video lesson
+                        if (lessonType.includes('fa-play-circle')) {
+                            videoPlayer.style.display = 'block';
+                        } else {
+                            videoPlayer.style.display = 'none';
+                        }
+                    }
+                });
+            });
+            
+            // Initialize with first lesson active
+            const firstLesson = document.querySelector('.lesson-list-item');
+            if (firstLesson) {
+                // Don't trigger click on mobile initially
+                if (window.innerWidth >= 1024) {
+                    firstLesson.click();
+                } else {
+                    firstLesson.classList.add('active');
+                    const lessonName = firstLesson.querySelector('.lesson-name').textContent;
+                    document.getElementById('lessonTitle').textContent = lessonName;
+                    document.getElementById('videoTitle').textContent = lessonName;
+                }
+            }
+            
+            // Handle window resize
+            function handleResize() {
+                if (window.innerWidth >= 1024) {
+                    curriculumSidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    // Keep panels visible on desktop if they were open
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Don't trigger shortcuts when typing in input fields
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                
+                // Space bar for play/pause
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    togglePlay();
+                }
+                
+                // Left/Right arrow for seeking
+                if (e.code === 'ArrowLeft') {
+                    e.preventDefault();
+                    videoPlayer.currentTime -= 10;
+                }
+                if (e.code === 'ArrowRight') {
+                    e.preventDefault();
+                    videoPlayer.currentTime += 10;
+                }
+                
+                // Up/Down arrow for volume
+                if (e.code === 'ArrowUp') {
+                    e.preventDefault();
+                    videoPlayer.volume = Math.min(videoPlayer.volume + 0.1, 1);
+                    volumeSlider.value = videoPlayer.volume * 100;
+                    updateVolumeIcon();
+                }
+                if (e.code === 'ArrowDown') {
+                    e.preventDefault();
+                    videoPlayer.volume = Math.max(videoPlayer.volume - 0.1, 0);
+                    volumeSlider.value = videoPlayer.volume * 100;
+                    updateVolumeIcon();
+                }
+                
+                // F for fullscreen
+                if (e.code === 'KeyF') {
+                    e.preventDefault();
+                    toggleFullscreen();
+                }
+                
+                // M for mute
+                if (e.code === 'KeyM') {
+                    e.preventDefault();
+                    if (videoPlayer.volume > 0) {
+                        videoPlayer.volume = 0;
+                        volumeSlider.value = 0;
+                    } else {
+                        videoPlayer.volume = 0.8;
+                        volumeSlider.value = 80;
+                    }
+                    updateVolumeIcon();
+                }
+            });
+            
+            // Initialize video duration display when metadata loads
+            videoPlayer.addEventListener('loadedmetadata', function() {
+                durationDisplay.textContent = formatTime(videoPlayer.duration);
+            });
+        });
+    </script>
+</body>
+</html>
