@@ -132,3 +132,41 @@ df["Name"] = df["Name"].str.lower()
 df["Legendary"] = df["Legendary"].astype(bool)
 
 print(df.to_string())
+
+
+import random
+from datetime import datetime
+
+tasks = [
+    "Study SQL window functions",
+    "Push code to GitHub",
+    "Drink water 💧",
+    "Refactor React components",
+    "Watch a movie",
+    "Go for a walk"
+]
+
+completed_tasks = []
+
+def show_tasks():
+    print("\n📋 TO-DO LIST")
+    for i, task in enumerate(tasks, 1):
+        print(f"{i}. {task}")
+
+def do_random_task():
+    if not tasks:
+        print("\n🎉 All tasks completed!")
+        return
+    
+    task = random.choice(tasks)
+    tasks.remove(task)
+    completed_tasks.append((task, datetime.now()))
+    print(f"\n✅ Completed: {task}")
+
+while tasks:
+    show_tasks()
+    do_random_task()
+
+print("\n🕒 COMPLETION LOG")
+for task, time in completed_tasks:
+    print(f"- {task} at {time.strftime('%H:%M:%S')}")
