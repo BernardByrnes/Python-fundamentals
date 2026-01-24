@@ -26,7 +26,7 @@ def bye():
   print('see yah')
 
 hello()
-bye()
+
 
 
 def performance(fn):
