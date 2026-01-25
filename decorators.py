@@ -26,6 +26,10 @@ def bye():
   print('see yah')
 
 hello()
+hello()
+hello()
+bye()
+bye()
 
 
 
