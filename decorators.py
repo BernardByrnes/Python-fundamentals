@@ -27,8 +27,6 @@ def bye():
 
 hello()
 hello()
-hello()
-bye()
 bye()
 
 
