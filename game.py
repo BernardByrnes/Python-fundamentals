@@ -13,5 +13,9 @@ def number_game():
     secret_number = random.randint(1, 50)
     attempts = 0
     max_attempts = 7
+    while attempts < max_attempts:
+        try:
+            guess = int(input("Enter your guess: "))
+            attempts += 1
 
     
