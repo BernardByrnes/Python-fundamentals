@@ -29,5 +29,7 @@ def number_game():
                 print("Too high!")
         except ValueError:
             print("Please enter a valid number.")
+    else:
+        print_slow(f"Game Over! The number was {secret_number}.")
 
     
