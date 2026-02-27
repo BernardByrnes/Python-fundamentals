@@ -23,5 +23,9 @@ def number_game():
             if guess == secret_number:
                 print_slow(f"Correct! You guessed it in {attempts} tries.")
                 break
+            elif guess < secret_number:
+                print("Too low!")
+            else:
+                print("Too high!")
 
     
