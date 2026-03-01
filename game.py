@@ -20,9 +20,6 @@ def number_game():
             if guess < 1 or guess > 50:
                 print("Stay within 1 and 50!")
                 continue
-            if guess == secret_number:
-                print_slow(f"Correct! You guessed it in {attempts} tries.")
-                break
 
 
 
