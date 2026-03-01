@@ -11,8 +11,7 @@ def number_game():
     print_slow("Welcome to the Number Guessing Game!")
     print_slow("I'm thinking of a number between 1 and 50.")
     secret_number = random.randint(1, 50)
-    attempts = 0
-    max_attempts = 7
+
 
 
 
