@@ -31,6 +31,3 @@ def number_game():
             print("Please enter a valid number.")
     else:
         print_slow(f"Game Over! The number was {secret_number}.")
-if __name__ == "__main__":
-    number_game()
-    
