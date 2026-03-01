@@ -17,9 +17,5 @@ def number_game():
         try:
             guess = int(input("Enter your guess: "))
             attempts += 1
-            if guess < 1 or guess > 50:
-                print("Stay within 1 and 50!")
-                continue
-
 
 
