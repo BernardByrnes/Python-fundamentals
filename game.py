@@ -25,8 +25,5 @@ def number_game():
                 break
             elif guess < secret_number:
                 print("Too low!")
-            else:
-                print("Too high!")
-        except ValueError:
-            print("Please enter a valid number.")
+
 
