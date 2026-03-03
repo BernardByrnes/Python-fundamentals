@@ -10,7 +10,9 @@ def get_computer_choice():
        (player == "scissors" and computer == "paper"):
         return "player"
     return "computer"
-
+def play_game():
+    player_score = 0
+    computer_score = 0
 
 
 
